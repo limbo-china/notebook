@@ -1,0 +1,41 @@
+mfc下，类似给编辑框、label等控件设置文本时，由于上一帧的文本不消失，在进行拖动下拉或者重置文本时，会出现重影问题，这时候需要：
+
+通知父窗口刷新才不会出现上图这样的"重影"现象。
+
+或者在OnCtlColor里指定背景颜色,比如白色,视觉上就没问题了。
+
+啊啊啊啊啊啊啊
+
+
+
+
+
+
+
+--------CODE--------
+
+在OnCtlColor里指定背景为白色：
+
+HBRUSH CHistoryContentDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	HBRUSH hbr = CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
+
+	if (nCtlColor == CTLCOLOR_STATIC)
+	{
+		pDC->SetBkColor(RGB(255, 255, 255));
+	}
+	return hbr;
+}
+
+父窗口刷新：
+
+// 2次修改标签文字
+    SetDlgItemText(IDC_STATIC1,_T("第一次文字"));
+    SetDlgItemText(IDC_STATIC1,_T("第二次文字"));
+    // 获取标签的矩形位置
+    CRect rc;
+    GetDlgItem(IDC_STATIC1)->GetWindowRect(&rc);
+    //转换为相对坐标
+    ScreenToClient(&rc);
+    //刷新指定区域,注意第2个参数为真,即刷新背景
+    InvalidateRect(&rc,TRUE);
