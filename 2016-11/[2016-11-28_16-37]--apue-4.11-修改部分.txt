@@ -1,0 +1,31 @@
+代码为 dopath() 函数的需要修改的部分，主要调用了chdir()来改变进程工作目录。
+
+--------CODE--------
+
+/*
+	 * It's a directory.  First call func() for the directory,
+	 * then process each filename in the directory.
+	 */
+	if ((ret = func(fullpath, &statbuf, FTW_D)) != 0)
+		return(ret);
+
+	if ((dp = opendir(fullpath)) == NULL)	/* can't read directory */
+		return(func(fullpath, &statbuf, FTW_DNR));
+
+	if ((ret = chdir(fullpath)) != 0)
+		err_ret("cannot chdir for %s", fullpath);
+
+	while ((dirp = readdir(dp)) != NULL) {
+		if (strcmp(dirp->d_name, ".") == 0  ||
+		    strcmp(dirp->d_name, "..") == 0)
+				continue;		/* ignore dot and dot-dot */
+		strcpy(fullpath, dirp->d_name);	/* append name after "/" */
+		if ((ret = dopath(func)) != 0)		/* recursive */
+			break;	/* time to leave */
+	}
+	
+	if ((ret = chdir("..")) != 0)
+		err_ret("cannot chdir ..");
+
+	if (closedir(dp) < 0)
+		err_ret("can't close directory %s", fullpath);
