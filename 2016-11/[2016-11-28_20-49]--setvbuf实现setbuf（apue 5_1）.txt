@@ -1,0 +1,21 @@
+若buf 为null ， 则 不带缓冲 。
+若fp 为标准输入输出，则行缓冲。为标准错误，不带缓冲。
+否则为全缓冲。
+
+
+
+--------CODE--------
+
+void setbuf(FILE *restrict fp, char *restrict buf){
+	if(buf == NULL || fp == stderr){
+		setvbuf(fp, buf, _IONBF, 0);
+		return ;
+	}
+	if(fp == stdin || fp == stdout){ 
+		setvbuf(fp, buf, _IOLBF, BUFSIZE/4);
+		return ;
+	}
+	setvbuf(fp, buf, _IOFBF, BUFSIZE);
+}
+	
+		

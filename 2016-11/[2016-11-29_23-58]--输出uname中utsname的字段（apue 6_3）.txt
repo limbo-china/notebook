@@ -1,0 +1,37 @@
+apue 6.3
+输出uname函数返回的结构体中的所有字段。
+比较和标准输出的差别。
+
+程序输出：
+sysname: Linux
+nodename: ubuntu
+release: 4.2.0-42-generic
+version: #49-Ubuntu SMP Tue Jun 28 21:26:26 UTC 2016
+machine: x86_64
+
+标准输出：
+$ uname -a 
+Linux ubuntu 4.2.0-42-generic #49-Ubuntu SMP Tue Jun 28 21:26:26 UTC 2016 x86_64( x86_64 x86_64 GNU/Linux)
+
+--------CODE--------
+
+#include <sys/utsname.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+struct utsname name ;
+
+int main(){
+	if(uname(&name) < 0){
+		printf("uname err.\n");
+		exit(0);
+	}
+
+	printf("sysname: %s\n",name.sysname );
+	printf("nodename: %s\n",name.nodename );
+	printf("release: %s\n",name.release );
+	printf("version: %s\n",name.version );
+	printf("machine: %s\n",name.machine );
+
+	return 0;
+}

@@ -1,0 +1,22 @@
+行缓冲是在遇到换行回车后才进行输出。
+如代码所示，结果为：
+before sleep 1.
+before sleep 2. after sleep 3.
+
+其中 'sleep 2' 是和'sleep 3' 一起输出的，均在'sleep 1'输出的5秒后输出，这是行缓冲的情况。
+
+
+--------CODE--------
+
+#include <stdio.h>
+
+
+int main(){
+	printf("before sleep 1.\n ");
+	printf("before sleep 2. ");
+
+	sleep(5);
+	
+	printf("after sleep 3.\n");
+	return 0;
+}
